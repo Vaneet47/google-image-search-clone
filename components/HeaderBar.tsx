@@ -1,46 +1,43 @@
+// components/HeaderBar.tsx
 import React from 'react';
-import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function HeaderBar() {
+export default function HeaderBar({
+  onProfilePress,
+}: {
+  onProfilePress: () => void;
+}) {
   return (
     <View style={styles.container}>
-      <Ionicons name='flask' size={24} color='white' />
-      <View style={styles.right}>
-        <MaterialIcons
-          name='star-border'
-          size={24}
-          color='white'
-          style={styles.icon}
+      <Image
+        source={require('../assets/images/google_logo.png')}
+        style={styles.logo}
+      />
+      <TouchableOpacity onPress={onProfilePress}>
+        <Image
+          source={{ uri: 'https://i.pravatar.cc/150' }}
+          style={styles.avatar}
         />
-        <TouchableOpacity>
-          <Image
-            source={{ uri: 'https://i.pravatar.cc/300' }} // placeholder avatar
-            style={styles.avatar}
-          />
-        </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingVertical: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
   },
-  right: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  icon: {
-    marginRight: 12,
+  logo: {
+    height: 30,
+    width: 90,
+    resizeMode: 'contain',
   },
   avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
   },
 });
