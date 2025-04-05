@@ -1,27 +1,31 @@
 import React, { useState } from 'react';
-import {
-  ScrollView,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ScrollView, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
 import HeaderBar from '../components/HeaderBar';
 import SearchBar from '../components/SearchBar';
 import FidgetButtons from '../components/FidgetButtons';
 import WeatherCards from '../components/WeatherCards';
 import NewsCard from '../components/NewsCard';
 import AccountModal from '@/components/AccoutModal';
+import { useRouter } from 'expo-router';
 
 export default function Home() {
+  const router = useRouter();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const handleSearch = () => {
+    router.push({ pathname: '/search' });
+  };
+
+  const handleMicPress = () => {
+    router.push({ pathname: '/search/mic' });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='light-content' />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <HeaderBar onProfilePress={() => setModalVisible(true)} />
-        <SearchBar />
+        <SearchBar onMicPress={handleMicPress} onSearchPress={handleSearch} />
         <FidgetButtons />
         <WeatherCards />
         <NewsCard />

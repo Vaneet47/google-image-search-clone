@@ -11,11 +11,15 @@
     "ios": {
       "supportsTablet": true
     },
+    "backgroundColor": "#202124",
     "android": {
+      "backgroundColor": "#202124",
+      "barStyle": "light-content",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.vaneet0708.googleimagesearchclone"
     },
     "web": {
       "bundler": "metro",
@@ -36,6 +40,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f52bb114-e760-49f5-893b-13b6ebfd6aeb"
+      }
     }
   }
 }

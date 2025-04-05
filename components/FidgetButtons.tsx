@@ -1,4 +1,3 @@
-// components/FidgetButtons.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';

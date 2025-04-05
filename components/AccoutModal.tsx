@@ -1,4 +1,3 @@
-// components/AccountModal.tsx
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
