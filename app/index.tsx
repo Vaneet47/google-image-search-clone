@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle='light-content' />
+      <StatusBar barStyle='light-content' backgroundColor='#202124' />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <HeaderBar onProfilePress={() => setModalVisible(true)} />
         <SearchBar onMicPress={handleMicPress} onSearchPress={handleSearch} />
