@@ -1,48 +1,80 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-// import Voice from '@react-native-voice/voice';
+import Voice from '@react-native-voice/voice';
 import { useEffect, useState } from 'react';
+
+const requestMicrophonePermission = async () => {
+  if (Platform.OS === 'android') {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+      {
+        title: 'Microphone Permission',
+        message:
+          'This app needs access to your microphone for speech recognition.',
+        buttonPositive: 'OK',
+      }
+    );
+    return granted === PermissionsAndroid.RESULTS.GRANTED;
+  }
+  return true;
+};
 
 export default function MicScreen() {
   const router = useRouter();
 
-  const [text, setText] = useState('');
-  const [listening, setListening] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [recognizedText, setRecognizedText] = useState('');
 
-  // useEffect(() => {
-  //   Voice.onSpeechStart = () => setListening(true);
-  //   Voice.onSpeechEnd = () => setListening(false);
-  //   Voice.onSpeechResults = onSpeechResults;
-  //   Voice.onSpeechError = onSpeechError;
+  useEffect(() => {
+    if (Voice) {
+      Voice.onSpeechResults = onSpeechResults;
+      Voice.onSpeechError = onSpeechError;
+      Voice.onSpeechEnd = () => setIsListening(false);
 
-  //   startListening();
+      // Start listening as soon as screen loads
+      startListening();
+    }
 
-  //   return () => {
-  //     Voice.destroy().then(Voice.removeAllListeners);
-  //   };
-  // }, []);
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, [Voice]);
 
-  // const startListening = async () => {
-  //   try {
-  //     await Voice.start('en-US');
-  //   } catch (e) {
-  //     console.error('Error starting Voice:', e);
-  //   }
-  // };
+  const startListening = async () => {
+    const hasPermission = await requestMicrophonePermission();
+    if (!hasPermission) return;
+
+    try {
+      setIsListening(true);
+      await Voice.start('en-US');
+    } catch (e) {
+      console.error('Voice start error:', e);
+    }
+  };
 
   const onSpeechResults = (event: any) => {
     const spokenText = event.value?.[0];
     if (spokenText) {
-      setText(spokenText);
+      setRecognizedText(spokenText);
+      setIsListening(false);
+      // Navigate to /search with the spoken query
       setTimeout(() => {
         router.push({ pathname: '/search', params: { q: spokenText } });
       }, 1000);
     }
   };
 
-  const onSpeechError = (e: any) => {
-    console.error('Speech error:', e);
+  const onSpeechError = (error: any) => {
+    console.error('Speech recognition error:', error);
+    setIsListening(false);
   };
 
   return (
@@ -51,9 +83,12 @@ export default function MicScreen() {
         <Ionicons name='arrow-back' size={24} color='white' />
       </TouchableOpacity>
 
-      {/* <Text style={styles.text}>Speak now</Text> */}
       <Text style={styles.text}>
-        {listening ? 'Listening...' : 'Initializing...'}
+        {isListening
+          ? 'Listening...'
+          : recognizedText
+          ? `You said: ${recognizedText}`
+          : 'Initializing...'}
       </Text>
 
       <View style={styles.dotsContainer}>
@@ -62,11 +97,6 @@ export default function MicScreen() {
         <View style={[styles.dot, { backgroundColor: '#FBBC05' }]} />
         <View style={[styles.dot, { backgroundColor: '#34A853' }]} />
       </View>
-
-      {/* <TouchableOpacity style={styles.songButton}>
-        <FontAwesome name='music' size={16} color='white' />
-        <Text style={styles.songText}>Search a song</Text>
-      </TouchableOpacity> */}
     </View>
   );
 }
@@ -99,18 +129,5 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-  },
-  songButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderColor: '#5F6368',
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-  },
-  songText: {
-    color: 'white',
-    marginLeft: 8,
   },
 });
