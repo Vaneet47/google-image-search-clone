@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 const allSuggestions = [
   'sleeveless gilet jacket',
@@ -24,14 +25,17 @@ const allSuggestions = [
 ];
 
 export default function SearchScreen() {
-  const [query, setQuery] = useState('');
+  const { q } = useLocalSearchParams();
+
+  const searchQuery = Array.isArray(q) ? q[0] : q ?? '';
+  const [query, setQuery] = useState(searchQuery);
 
   const filtered = allSuggestions.filter((s) =>
     s.toLowerCase().includes(query.toLowerCase())
   );
 
   const handleMicPress = () => {
-    router.push({ pathname: '/search/mic' });
+    router.replace({ pathname: '/search/mic' });
   };
 
   return (

@@ -39,7 +39,6 @@ export default function MicScreen() {
       Voice.onSpeechError = onSpeechError;
       Voice.onSpeechEnd = () => setIsListening(false);
 
-      // Start listening as soon as screen loads
       startListening();
     }
 
@@ -67,7 +66,7 @@ export default function MicScreen() {
       setIsListening(false);
       // Navigate to /search with the spoken query
       setTimeout(() => {
-        router.push({ pathname: '/search', params: { q: spokenText } });
+        router.replace({ pathname: '/search', params: { q: spokenText } });
       }, 1000);
     }
   };
