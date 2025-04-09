@@ -24,8 +24,25 @@ const allSuggestions = [
   'summer cotton trousers',
 ];
 
+const mockResults = [
+  {
+    id: '1',
+    image: 'https://via.placeholder.com/150',
+    title: 'Purple Top - Amazon',
+    link: 'amazon.com',
+  },
+  {
+    id: '2',
+    image: 'https://via.placeholder.com/150',
+    title: 'Lavender Shirt - Myntra',
+    link: 'myntra.com',
+  },
+];
+
 export default function SearchScreen() {
-  const { q } = useLocalSearchParams();
+  const { q, imageUri } = useLocalSearchParams();
+
+  console.log({ imageUri });
 
   const searchQuery = Array.isArray(q) ? q[0] : q ?? '';
   const [query, setQuery] = useState(searchQuery);
@@ -36,6 +53,10 @@ export default function SearchScreen() {
 
   const handleMicPress = () => {
     router.replace({ pathname: '/search/mic' });
+  };
+
+  const handleCameraPress = () => {
+    router.replace({ pathname: '/search/image-search' });
   };
 
   return (
@@ -57,6 +78,9 @@ export default function SearchScreen() {
         />
         <TouchableOpacity onPress={handleMicPress}>
           <Ionicons name='mic' size={20} color='#9AA0A6' />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleCameraPress}>
+          <Ionicons name='camera' size={20} color='#9AA0A6' />
         </TouchableOpacity>
       </View>
 

@@ -19,13 +19,20 @@ export default function Home() {
   const handleMicPress = () => {
     router.push({ pathname: '/search/mic' });
   };
+  const handleCameraPress = () => {
+    router.push({ pathname: '/search/image-search' });
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='light-content' backgroundColor='#202124' />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <HeaderBar onProfilePress={() => setModalVisible(true)} />
-        <SearchBar onMicPress={handleMicPress} onSearchPress={handleSearch} />
+        <SearchBar
+          onMicPress={handleMicPress}
+          onCameraPress={handleCameraPress}
+          onSearchPress={handleSearch}
+        />
         <FidgetButtons />
         <WeatherCards />
         <NewsCard />
